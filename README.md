@@ -90,7 +90,7 @@ In this mode, the SSH-tunnle software must be run on both servers, on the upstre
 The ports on the upstream server must be configured remotely.
 In this mode, the `local_port` of the **upstream server** is mounted **locally** on the `destination_port` of the bridge server.
 
-Sample Congig for `config.json`
+> Sample Congig for `config.json`
 
 ```json
 {
@@ -116,6 +116,8 @@ There are two solutions to solve this problem The
 
 To open the port that was opened locally in **step 1**, create a tunnel on this port and IP **127.0.0.1** with the SSH tunnel program.
 open port `local_port` on `0.0.0.0`
+
+> Sample Congig for `config.json`
 
 ```json
    {
