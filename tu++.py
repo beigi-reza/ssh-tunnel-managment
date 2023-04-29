@@ -77,13 +77,13 @@ def FnStartTunnle():
                print (Style.BRIGHT + Fore.WHITE + "Tunneling Port [ " + Fore.RED + TDestinationPort + Fore.WHITE + " ] Server [ " + Fore.RED + TSSHIp + Fore.WHITE + " ] to [ " + Fore.RED + Tlocal_port + Fore.WHITE + " ] server Local for [ " + Fore.BLUE + TName + Fore.WHITE + " ]" + Style.RESET_ALL )               
                Command = "sudo ssh -NTC -o ServerAliveInterval=60 -o ExitOnForwardFailure=yes -f -N -p {SSHPort} {SSHUser}@{SSHIp} -L 0.0.0.0:{local_port}:0.0.0.0:{DestinationPort}"
                Command = Command.format(SSHPort = TSSHPort, SSHUser = TSSHUser, SSHIp = TSSHIp, local_port = Tlocal_port, DestinationPort = TDestinationPort )
-               #os.system(Command)                                        
+               os.system(Command)                                        
                Logit("start-local")
             elif Ttype == "remote":               
                print (Style.BRIGHT + Fore.WHITE + "Remote Tunneling port [ " + Fore.RED + Tlocal_port + Fore.WHITE + " ] local server to server [ " + Fore.RED + TSSHIp + Fore.WHITE + " ] port [ " + Fore.RED + TDestinationPort + Fore.WHITE + " ] for [ " + Fore.BLUE + TName + " ] " + Style.RESET_ALL)
                Command = "ssh -R 0.0.0.0:{DestinationPort}:127.0.0.1:{local_port} -N -f -p {SSHPort} {SSHUser}@{SSHIp}"
                Command = Command.format(DestinationPort = TDestinationPort, local_port = Tlocal_port, SSHPort = TSSHPort, SSHUser = TSSHUser, SSHIp = TSSHIp)
-               #os.system(Command)          
+               os.system(Command)          
                Logit("start-remote")
       elif len(ListOfTunnel) == 0:
          print(Style.BRIGHT + Fore.YELLOW + "Tunnel Key Empty")
