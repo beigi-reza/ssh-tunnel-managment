@@ -1,4 +1,4 @@
-# Tunnel port & Expose
+# Manegment SSH tunnel and expose IT
 
 ![licence](https://img.shields.io/github/license/beigi-reza/ssh-tunnel)
 
@@ -49,6 +49,8 @@ On this mode, the SSH Tunnel Type must `locally` and the configuration of the po
 User --> Bridge Server --> UpStream Server --> Free Internet
 ```
 
+> Sample Congig for `config.json`
+
 ```json
 {
     "ssh_ip" : "192.168.1.1",
@@ -88,6 +90,8 @@ In this mode, the SSH-tunnle software must be run on both servers, on the upstre
 The ports on the upstream server must be configured remotely.
 In this mode, the `local_port` of the **upstream server** is mounted **locally** on the `destination_port` of the bridge server.
 
+Sample Congig for `config.json`
+
 ```json
 {
     "ssh_ip" : "192.168.1.1",
@@ -115,14 +119,14 @@ open port `local_port` on `0.0.0.0`
 
 ```json
    {
-            "ssh_ip" : "127.0.0.1",
-            "ssh_user" : "root",
-            "ssh_port" : "22",
-            "role_name": "OutLine Expose",
-            "local_port": "443",
-            "destination_port": "5443",
-            "type": "local"
- },
+  "ssh_ip" : "127.0.0.1",
+  "ssh_user" : "root",
+  "ssh_port" : "22",
+  "role_name": "OutLine Expose",
+  "local_port": "443",
+  "destination_port": "5443",
+  "type": "local"
+ }
 ```
 
 ## Run SSH-tunnel
