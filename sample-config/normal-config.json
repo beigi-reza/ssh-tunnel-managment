@@ -1,0 +1,34 @@
+{
+"title": "PortList",
+"logfile": "/var/log/ssh-tunnle.log",
+"tunnel": [
+    {
+        "ssh_ip" : "195.248.240.62",
+        "ssh_user" : "root",
+        "ssh_port" : "5000",
+        "role_name": "Outline",
+        "local_port": "8080",
+        "destination_port": "8080",
+        "type": "local"
+    },
+    {
+        "ssh_ip" : "195.248.240.62",
+        "ssh_user" : "root",
+        "ssh_port" : "5000",
+        "role_name": "Cisco AnyConnect",
+        "local_port": "443",
+        "destination_port": "5005",
+        "type": "local"
+    },
+    {
+        "ssh_ip" : "195.248.240.62",
+        "ssh_user" : "root",
+        "ssh_port" : "5000",
+        "role_name": "squid",
+        "local_port": "8443",
+        "destination_port": "3128",
+        "type": "local"
+    }
+
+]
+}

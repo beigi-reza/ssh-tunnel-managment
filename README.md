@@ -118,7 +118,6 @@ To open the port that was opened locally in **step 1**, create a tunnel on this 
 open port `local_port` on `0.0.0.0`
 
 > Sample Config for `config.json`
-
 ```json
    {
   "ssh_ip" : "127.0.0.1",
@@ -132,6 +131,20 @@ open port `local_port` on `0.0.0.0`
 ```
 
 ## Run SSH-tunnel
+
+open `tu++.py` and  replace `<JSPATH>` with real path of `config.json`
+
+```bash
+vim tu++.py
+```
+
+find & Replace it 
+
+```
+JsFilePath = "<JSPATH>/config.json"
+```
+Save & Exit
+
 run `tu++.py` on conole
 
 ```bash

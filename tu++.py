@@ -6,7 +6,7 @@ import os
 import json
 import signal
 
-JsFilePath = "/home/beigi/Documents/github/ssh-tunnel/config.json"
+JsFilePath = "<JSPATH>/config.json"
 
 
 def FnBanner():
