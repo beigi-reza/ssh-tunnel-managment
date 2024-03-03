@@ -10,36 +10,36 @@ JsFilePath = "<JSPATH>/config.json"
 
 
 def FnBanner():
-    print (Fore.BLUE + "    ______  ______                       __        ______   " + Fore.RESET)
-    print (Fore.CYAN + "   / / / / /_  __/_  ______  ____  ___  / / __    _\ \ \ \  " + Fore.RESET)
-    print (Fore.GREEN + "  / / / /   / / / / / / __ \/ __ \/ _ \/ /_/ /___/ /\ \ \ \ " + Fore.RESET)
-    print (Fore.RED + "  \ \ \ \  / / / /_/ / / / / / / /  __/ /_  __/_  __/ / / / " + Fore.RESET)
-    print (Fore.YELLOW + "   \_\_\_\/_/  \__,_/_/ /_/_/ /_/\___/_/ /_/   /_/ /_/_/_/  " + Fore.RESET)
-    print (Fore.MAGENTA + "                                                            " + Fore.RESET)
+   print (Fore.BLUE + "    ______  ______                       __        ______   " + Fore.RESET)
+   print (Fore.CYAN + "   / / / / /_  __/_  ______  ____  ___  / / __    _\ \ \ \  " + Fore.RESET)
+   print (Fore.GREEN + "  / / / /   / / / / / / __ \/ __ \/ _ \/ /_/ /___/ /\ \ \ \ " + Fore.RESET)
+   print (Fore.RED + "  \ \ \ \  / / / /_/ / / / / / / /  __/ /_  __/_  __/ / / / " + Fore.RESET)
+   print (Fore.YELLOW + "   \_\_\_\/_/  \__,_/_/ /_/_/ /_/\___/_/ /_/   /_/ /_/_/_/  " + Fore.RESET)
+   print (Fore.MAGENTA + "                                                            " + Fore.RESET)
 
 def FnPrintMenu():
-    print("")
-    print (Style.DIM + "press 'q' for quit" + Style.RESET_ALL)        
-    print (Style.DIM + "press 'h' for help" + Style.RESET_ALL)        
-    usrInput = input(Style.BRIGHT + "Command Mode ( " + Fore.BLUE + "Status [ " + Fore.YELLOW + "*U*" + Fore.BLUE + " ] Sart [ " + Fore.YELLOW + "S" + Fore.BLUE + " ] / Drop/Kill  [ " + Fore.YELLOW + "D" + Fore.BLUE + " ]"+ Fore.RESET + " ) : " + Style.RESET_ALL)
-    try:  
+   print("")
+   print (Style.DIM + "press 'q' for quit" + Style.RESET_ALL)        
+   print (Style.DIM + "press 'h' for help" + Style.RESET_ALL)        
+   usrInput = input(Style.BRIGHT + "Command Mode ( " + Fore.BLUE + "Status [ " + Fore.YELLOW + "*U*" + Fore.BLUE + " ] Sart [ " + Fore.YELLOW + "S" + Fore.BLUE + " ] / Drop/Kill  [ " + Fore.YELLOW + "D" + Fore.BLUE + " ]"+ Fore.RESET + " ) : " + Style.RESET_ALL)
+   try:  
       usrInput = usrInput[0] 
-    except:
+   except:
       usrInput = "u"  
- 
-    if usrInput.lower() == "u":     
-       FnCheckStatus()
-    elif usrInput.lower() == "s":   
-       FnStartTunnle()
-    elif usrInput.lower() == "d":      
-       FnKillProcess()
-    elif usrInput.lower() == "q":      
+
+   if usrInput.lower() == "u":     
+      FnCheckStatus()
+   elif usrInput.lower() == "s":   
+      FnStartTunnle()
+   elif usrInput.lower() == "d":      
+      FnKillProcess()
+   elif usrInput.lower() == "q":      
       sys.exit()
-    elif usrInput.lower() == "h":
-       print("")
-       Fnhelp()       
-       FnPrintMenu()
-    else: 
+   elif usrInput.lower() == "h":
+      print("")
+      Fnhelp()       
+      FnPrintMenu()
+   else: 
       os.system('clear')
       print ("-----------------------")
       print (Style.BRIGHT + Fore.BLACK + Back.WHITE + "(" + usrInput + ") is Not Valid Code ")  
@@ -47,11 +47,10 @@ def FnPrintMenu():
       FnPrintMenu()
 def FnLoadJsonFile():
    try:
-     JsFile = open(JsFilePath, "r")
+      JsFile = open(JsFilePath, "r")
    except:
-     print(Fore.RED + "Json File Not Found " + Fore.RESET)  
-     sys.exit()
-    
+      print(Fore.RED + "Json File Not Found " + Fore.RESET)  
+      sys.exit()
    js = JsFile.read()
    js  = js.replace('\n', '') 
    global JsonConfig
@@ -129,7 +128,7 @@ def FnCheckStatus():
 
             pids = os.popen("ps ax | grep " + str + " | grep -v grep")               
             if pids.read() == "":
-                TaStatus = Style.NORMAL + Fore.WHITE + Back.RED + "Not active" + Style.RESET_ALL
+               TaStatus = Style.NORMAL + Fore.WHITE + Back.RED + "Not active" + Style.RESET_ALL
             else:
                TaStatus = Style.NORMAL + Fore.WHITE + Back.GREEN + "Active" + Style.RESET_ALL
          
@@ -177,7 +176,7 @@ def FnKillProcess():
 
             pids = os.popen("ps ax | grep " + str + " | grep -v grep")               
             if pids.read() == "":
-                pass
+               pass
             else:               
                TaStatus = Style.NORMAL + Fore.WHITE + Back.RED + "** KILLED **" + Style.RESET_ALL         
                TaTitle = Style.BRIGHT + TName + Style.RESET_ALL
@@ -187,12 +186,12 @@ def FnKillProcess():
                print ("{:<20} {:<30} {:<20} {:<20} {:<30} {:<15}".format(TaTunnelType, TaTitle, TaIP, TaLocalport, TaDestPort, TaStatus))
                ActiveSSHTunnel = True
                try:
-                   for line in os.popen("ps ax | grep " + str + " | grep -v grep"):
-                       fields = line.split()
-                       pid = fields[0]                       
-                       os.kill(int(pid), signal.SIGKILL)                       
+                  for line in os.popen("ps ax | grep " + str + " | grep -v grep"):
+                     fields = line.split()
+                     pid = fields[0]                       
+                     os.kill(int(pid), signal.SIGKILL)                       
                except:
-                   pass                             
+                  pass                             
                Logit("drop") 
 
       if ActiveSSHTunnel is True:         
@@ -207,31 +206,31 @@ def FnKillProcess():
          FnPrintMenu() 
 
 def Logit(type):
-    if type == "drop":
-       FnLogit("KILL", "drop All Active SSH Tunnel","Parameter mode is {}".format(VarParameterMode),"successfully" )         
-    elif type == "drop-fail":
-       FnLogit("KILL", "drop All Active SSH Tunnel","Parameter mode is {}".format(VarParameterMode),"Fail" )         
-    elif type == "start-local":
-       FnLogit("START", "Start Local SSH Tunnel","Parameter mode is {}".format(VarParameterMode),"--" )         
-    elif type == "start-remote":
-       FnLogit("START", "Start Remote SSH Tunnel","Parameter mode is {}".format(VarParameterMode),"--" )         
-    elif type == "restart":
-       FnLogit("RESTART", "ReStart SSH Tunnel","Parameter mode is {}".format(VarParameterMode),"---" )         
+   if type == "drop":
+      FnLogit("KILL", "drop All Active SSH Tunnel","Parameter mode is {}".format(VarParameterMode),"successfully" )         
+   elif type == "drop-fail":
+      FnLogit("KILL", "drop All Active SSH Tunnel","Parameter mode is {}".format(VarParameterMode),"Fail" )         
+   elif type == "start-local":
+      FnLogit("START", "Start Local SSH Tunnel","Parameter mode is {}".format(VarParameterMode),"--" )         
+   elif type == "start-remote":
+      FnLogit("START", "Start Remote SSH Tunnel","Parameter mode is {}".format(VarParameterMode),"--" )         
+   elif type == "restart":
+      FnLogit("RESTART", "ReStart SSH Tunnel","Parameter mode is {}".format(VarParameterMode),"---" )         
 
 def FnLogit(VactionName,Massege,Mode,Status):
-    LogFileName = JsonConfig["logfile"]
-    try:
+   LogFileName = JsonConfig["logfile"]
+   try:
       f = open(LogFileName, "a")
       try:
-        now = datetime.now()
-        now = now.strftime("%d/%m/%Y %H:%M:%S")
-        logs = "\n[ {vDate} ] - [ {vAction} ] - [ {vMode}] -[ {vStatus} ] - [ {vMassege} ]"        
-        f.write(logs.format(vDate = now, vAction = VactionName , vMassege = Massege, vMode = Mode, vStatus = Status))
+         now = datetime.now()
+         now = now.strftime("%d/%m/%Y %H:%M:%S")
+         logs = "\n[ {vDate} ] - [ {vAction} ] - [ {vMode}] -[ {vStatus} ] - [ {vMassege} ]"        
+         f.write(logs.format(vDate = now, vAction = VactionName , vMassege = Massege, vMode = Mode, vStatus = Status))
       except:
-        print("Something went wrong when writing to the log file [ " + Fore.RED + LogFileName + Fore.RESET + " ]")
+         print("Something went wrong when writing to the log file [ " + Fore.RED + LogFileName + Fore.RESET + " ]")
       finally:
-        f.close()
-    except:
+         f.close()
+   except:
       print("Something went wrong when writing to the log file [ " + Style.BRIGHT +  Fore.RED + LogFileName + Style.RESET_ALL + " ]")
 
 
@@ -260,24 +259,24 @@ else:
    VarParameterMode = True
    FnLoadJsonFile()
    for i in sys.argv:
-       if i.lower() == "-d":          
-          FnBanner()
-          FnKillProcess()
-       elif i.lower() == "-u":          
-          FnBanner()
-          FnCheckStatus()
-       elif i.lower() == "-s":
-          FnBanner()
-          FnStartTunnle()
-       elif i.lower() == "-r":
-          Logit("restart")
-          FnBanner()
-          FnKillProcess()          
-          FnStartTunnle()
-       elif i.lower() == "-h":
-          FnBanner()
-          Fnhelp()
-       else:
-          print(Style.BRIGHT + Fore.GREEN + "-h" + Fore.WHITE + " for Help")   
-          
+      if i.lower() == "-d":          
+         FnBanner()
+         FnKillProcess()
+      elif i.lower() == "-u":          
+         FnBanner()
+         FnCheckStatus()
+      elif i.lower() == "-s":
+         FnBanner()
+         FnStartTunnle()
+      elif i.lower() == "-r":
+         Logit("restart")
+         FnBanner()
+         FnKillProcess()          
+         FnStartTunnle()
+      elif i.lower() == "-h":
+         FnBanner()
+         Fnhelp()
+      else:
+         print(Style.BRIGHT + Fore.GREEN + "-h" + Fore.WHITE + " for Help")   
+         
    
