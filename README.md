@@ -1,4 +1,4 @@
-# Manegment SSH tunnel and expose IT
+# Management SSH tunnels
 
 ![licence](https://img.shields.io/github/license/beigi-reza/ssh-tunnel)
 
