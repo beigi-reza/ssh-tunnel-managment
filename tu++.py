@@ -6,7 +6,20 @@ import os
 import json
 import signal
 
-JsFilePath = "<JSPATH>/config.json"
+JsFilePath = "/home/beigi/Github/ssh-tunnel/config.json"
+
+###################################################
+###################################################
+
+def handler(signum, frame):
+    print("")
+    print(Style.NORMAL + Fore.RED + " Force Exit By press [ " + Fore.WHITE + "CTRL + C" + Fore.RED + " ]")
+    print("")
+    FnExit()
+
+def FnExit():          
+    #print (Style.NORMAL + Fore.WHITE + "Bye :)")        
+    sys.exit()
 
 
 def FnBanner():
@@ -234,8 +247,6 @@ def FnLogit(VactionName,Massege,Mode,Status):
       print("Something went wrong when writing to the log file [ " + Style.BRIGHT +  Fore.RED + LogFileName + Style.RESET_ALL + " ]")
 
 
-   
-
 def Fnhelp():
    InFo = """ This program can manage SSH tunnels between two Linux servers.
    The information of the tunnels read from a json file.
@@ -249,6 +260,10 @@ def Fnhelp():
    print(Style.BRIGHT + Fore.WHITE + "Run with parameter    [ " + Fore.BLUE + "tunnel++ -d" + Fore.WHITE + " ] for Drop/kill all tunnel/s" + Style.RESET_ALL)
    print(Style.BRIGHT + Fore.WHITE + "Run with parameter    [ " + Fore.BLUE + "tunnel++ -r" + Fore.WHITE + " ] for Restart ( Drop & Start) all tunnel/s" + Style.RESET_ALL)   
 
+######################################################
+######################################################
+   
+signal.signal(signal.SIGINT, handler)
 
 if len(sys.argv) == 1:   
    VarParameterMode = False
