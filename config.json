@@ -1,33 +1,27 @@
 {
-    "title": "Portlist",
+    "title": "SSH Tunnel Managent",
     "logfile": "/home/beigi/ssh-tunnle.log",
+    "upstream_is_Block": true,
+    "This_Server":{
+        "ip" : "10.1.8.46",
+        "user" : "root",
+        "port" : "22"
+    },
+    "Dest_Server":{
+        "ip" : "10.1.8.180",
+        "user" : "root",
+        "port" : "22"
+    },
     "tunnel": [
         {
-            "ssh_ip" : "10.1.8.46",
-            "ssh_user" : "root",
-            "ssh_port" : "22",
-            "role_name": "TMSDashboard",
-            "local_port": "99",
-            "destination_port": "999",
-            "type": "local"
+            "role_name": "WebSITE",
+            "local_port": "81",
+            "destination_port": "8081"
         },
         {
-            "ssh_ip" : "10.1.8.46",
-            "ssh_user" : "root",
-            "ssh_port" : "22",
-            "role_name": "CloudApi",
-            "local_port": "88",
-            "destination_port": "8888",
-            "type": "local"
-        },
-        {
-            "ssh_ip" : "10.1.8.46",
-            "ssh_user" : "root",
-            "ssh_port" : "22",
-            "role_name": "squid",
-            "local_port": "7070",
-            "destination_port": "7171",
-            "type": "remote"
+            "role_name": "TMS",
+            "local_port": "82",
+            "destination_port": "8082"
         }
 
     ]
