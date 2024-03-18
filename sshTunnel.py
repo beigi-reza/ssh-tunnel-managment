@@ -376,14 +376,14 @@ def GetRunMode():
       print("")      
       print(f"{_w}in {_y}Normal Mode{_w} , the SSH-Tunnel-Managment software runs on the {_b}bridge server({ThisIP}){_w}. In this case, the bridge server must be able to connect to the {_c}upstream server{_w}.{_reset}")
       print(f"{_w}If the upstream server is {_r}blocked{_w}, you can transfer the SSH-Tunnel-Managment software to the upstream server and change the execution method to the upstream block mode, for mor information {_g}use help{_reset}")
-      PrintServerDetail()      
    else:      
-      print(f"{_B}{_w}if Upstream Server is Blocked :{_reset}")
-      bannerlib.PrintNetGraph("BlockMode",BrIP=ThisIP,UpIP=DestIP)
-      print(f"{_w}in {_r} Upstream Block {_w}Mode, the SSH-Tunnel-Managment software runs on the {_c}Upstream server({DestIP}){_w}. In this case, the Upstream server must be able to connect to the {_b}bridge server{_w}.{_reset}")            
-      print(f"{_w}This method is used when you have a very severe restriction and the access to the {_c}upstream server{_w} is {_r}blocked{_reset}")
       bannerlib.PrintNetGraph("UpstreamMode",BrIP=ThisIP,UpIP=DestIP)
-
+#      print("")
+#      print(f"{_B}{_w}if Upstream Server is Blocked :{_reset}")
+#      bannerlib.PrintNetGraph("BlockMode",BrIP=ThisIP,UpIP=DestIP)
+#      print(f"{_w}in {_r} Upstream Block {_w}Mode, the SSH-Tunnel-Managment software runs on the {_c}Upstream server({DestIP}){_w}. In this case, the Upstream server must be able to connect to the {_b}bridge server{_w}.{_reset}")            
+      #print(f"{_w}This method is used when you have a very severe restriction and the access to the {_c}upstream server{_w} is {_r}blocked{_reset}")
+   PrintServerDetail()      
 
 def PrintServerDetail():
    print("")

@@ -39,4 +39,3 @@ def PrintNetGraph(name:str,UpIP="",BrIP=""):
         print("")
         print(f"(( {_B}{_w}User {_g}-->{_b} {BrIP} {_r}--x{_c} {UpIP} {_g} -->{_w} Free Internet{_reset} ))")         
         print("")
-
