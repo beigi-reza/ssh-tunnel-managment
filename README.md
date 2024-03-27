@@ -104,13 +104,14 @@ Add this section once for each (tunnel) port
 - if parameter `upstream_is_Block` set `false`
 
 ```
-(Client) <--> [ Bridge Server:Local_port ] --> [ Upstream Server:destination_port ] <-> (Internet)
+[ Bridge Server:Local_port ] --> [ Upstream Server:destination_port ]
 ```
 
 if parameter `upstream_is_Block` set `true`
 
-`destination_port` server Upstream bind to `local_port` server Bridge
-
+```
+[ Bridge Server:Local_port ] <-- [ Upstream Server:destination_port ]
+```
 
 
 
