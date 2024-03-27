@@ -1,24 +1,22 @@
-# Management SSH tunnels V3 (Beta)
+# Tunnels Manegment
 
 ![licence](https://img.shields.io/github/license/beigi-reza/ssh-tunnel)
 
 This solution can be used for all methods for bypass limitations in highly restricted networks.
 
-This program manage SSH tunnels between two Linux servers. The information of the tunnels read from a json file. This program can be run in UI and parameter mode (for scheduled execution).
+This program manage SSH tunnels between two Linux servers. Configuration of the tunnels read from a json file with the name `config.json`. This program can be run in Linux terminal and parameter mode (for scheduled execution).
 
 for Use this program (solution), you need this:
 
 - Upstream Server: A server that has access to the free Internet.
-- Bridge Server: A server that is available to clients and has access to the upstream server (or upstream server access to Bridge Server)
- prerequisite
-- The connection between the two servers must be through a key so that SSH connections can be managed without entering a password.
+- Bridge Server: A server that is available to clients 
+- One of Server access to another
+- The connection between the two servers must be a key so that SSH connections.
 
 # Table of contents
 
-- Definition
-  - [Upstream Server](#upstream-server)
-  - [bridge Server](#bridge-server)
-- Config
+- Terminology
+- Methods
   - [Run on Bridge Server](#run-on-bridge-server)
   - [Run on Upstream Server](#run-on-upstream-server)
     - [Step - 1 Run on Upstream Server](#step-1-run-on-upstream-server)
@@ -30,107 +28,96 @@ for Use this program (solution), you need this:
   - [Run SSH-tunnel with parameter](#run-ssh-tunnel-with-parameter)
 - [Scheduled SSH-Tunnel](#scheduled-ssh-tunnel)
 
-## Upstream Server
 
-A server that has access to the free Internet.
+## Terminology
 
-## Bridge Server
+- **Upstream Server** : A server that has access to the free Internet.
 
-This server that is available to clients and has access to the upstream server
+- **Bridge Server** : This server that is available to Clients
+- **Client** : A user-side application with access to the bridge server.
 
-# Run on Bridge Server
+## Methods
 
-In normal mode, SSH-Tunnel software runs on the bridge server.
-On this mode, the SSH Tunnel Type must `locally` and the configuration of the ports is as follows
+### Bridge server access to the upstream server
 
-**Locally Mode**
+`
+(Client) <-> [ Bridge Server ] <-> [ Upstream Server ] <-> (Internet)
+`
 
+in This method, the Tunnel-Managment software runs on the **bridge server** and the bridge server must be able to ssh access to the upstream server
+
+in `config.json` parameter `upstream_is_Block` set **`false`**
+
+```json
+"upstream_is_Block": false,    
 ```
-User --> Bridge Server --> UpStream Server --> Free Internet
+
+### upstream server is Blocked but but it can Connect to Bridge server 
+
+- If upstream server is blocked 
+- If connect to upstream, it will be blocked
+
+**use this method.**
+
+`
+(Client) <-> [ Bridge Server ] <-X [ Upstream Server ] <-> (Internet)
+`
+in This method, the Tunnel-Managment software runs on the **Upstream server** and must be able to ssh access to the bridge server 
+
+in `config.json` parameter `upstream_is_Block` set **`true`**
+
+```json
+"upstream_is_Block": true,
 ```
 
-> Sample Config for `config.json`
+
+## Run & Config
+
+
+### Destination Server
+Update Detination Server ssh config in File `config.json` section `Dest_Server`
 
 ```json
 {
-    "ssh_ip" : "192.168.1.1",
-    "ssh_user" : "root",
-    "ssh_port" : "22",
-    "role_name": "Tunnle Name",
-    "local_port": "8443",
-    "destination_port": "3128",
-    "type": "local"
+  .
+  .
+    "Dest_Server":{
+        "ip" : "10.1.8.180",
+        "user" : "root",
+        "port" : "22"
+    },
+  .
+  .
 }
 ```
 
-`destination_port` of the upstream server is mounted on the `local_port` of the bridge server and the port is publicly available.
+- If you run the software on the bridge server and `upstream_is_Block` set to `false`, your destination server will be Upstream server
 
-You can configure this configuration for each port
+- If you run the software on the upstream server and `upstream_is_Block` set to `true`, your destination server will be bridge server
 
-## Run on Upstream Server
 
-If access to the **upstream server** is restricted or blocked `:(` but the **upstream server** can connect to the **bridge server**. You can change your connection mode and remove the created restriction
+### Tunnel Data
 
-> Upstream Server Is Blocked
-
-```
-User --> Bridge Server --X UpStream Server --> Free Internet
-```
-
-> Use Remote SSH Tunnel
-
-```
-User --> Bridge Server <-- UpStream Server --> Free Internet
-```
-
-In this mode, the SSH-tunnle software must be run on both servers, on the upstream server in `remote` mode and on the bridge server in `local` mode.
-
-### Step 1 (Run on Upstream Server)
-
-The ports on the upstream server must be configured remotely.
-In this mode, the `local_port` of the **upstream server** is mounted **locally** on the `destination_port` of the bridge server.
-
-> Sample Config for `config.json`
-
+Add this section once for each (tunnel) port
 ```json
-{
-    "ssh_ip" : "192.168.1.1",
-    "ssh_user" : "root",
-    "ssh_port" : "22",
-    "role_name": "Tunnle For Proxy",
-    "local_port": "3158",
-    "destination_port": "5128",
-    "type": "remote"
-}
-```
-### Step 2 (Run on Bridge Server)
-
-The port opened in *Step 1* is opened locally on the **bridge server** and it is not possible to access it from Internet.
-To resolve problem, this port should be bound on another port in **0.0.0.0** mode
-
-There are two solutions to solve this problem The
-- **first method:** SSH tunneling on this port on the **bridge server** 
-- **second method:** Using the socat command and establish a relationship between two data sources
-
-*In this document, we use the first method*
-
-To open the port that was opened locally in **step 1**, create a tunnel on this port and IP **127.0.0.1** with the SSH tunnel program.
-open port `local_port` on `0.0.0.0`
-
-> Sample Config for `config.json`
-```json
-   {
-  "ssh_ip" : "127.0.0.1",
-  "ssh_user" : "root",
-  "ssh_port" : "22",
-  "role_name": "OutLine Expose",
-  "local_port": "443",
-  "destination_port": "5443",
-  "type": "local"
- }
+        {
+            "role_name": "Mongo EXpress",
+            "local_port": "9091",
+            "destination_port": "8081"
+        }
 ```
 
-## Run SSH-tunnel
+if parameter `upstream_is_Block` set `false`
+
+`local_port` server Bridge bind to `destination_port` server Upstream
+
+if parameter `upstream_is_Block` set `true`
+
+`destination_port` server Upstream bind to `local_port` server Bridge
+
+
+
+
 
 open `tu++.py` and  replace `<JSPATH>` with real path of `config.json`
 

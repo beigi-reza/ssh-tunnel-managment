@@ -5,6 +5,7 @@ import sys
 import os
 import json
 import signal
+import socket
 
 _B = Style.BRIGHT
 _N = Style.NORMAL
@@ -36,13 +37,13 @@ def FnExit():
 
 
 
-def FnBanner():
-   print (Fore.BLUE + "    ______  ______                       __        ______   " + Fore.RESET)
-   print (Fore.CYAN + "   / / / / /_  __/_  ______  ____  ___  / / __    _\ \ \ \  " + Fore.RESET)
-   print (Fore.GREEN + "  / / / /   / / / / / / __ \/ __ \/ _ \/ /_/ /___/ /\ \ \ \ " + Fore.RESET)
-   print (Fore.RED + "  \ \ \ \  / / / /_/ / / / / / / /  __/ /_  __/_  __/ / / / " + Fore.RESET)
-   print (Fore.YELLOW + "   \_\_\_\/_/  \__,_/_/ /_/_/ /_/\___/_/ /_/   /_/ /_/_/_/  " + Fore.RESET)
-   print (Fore.MAGENTA + "                                                            " + Fore.RESET)
+#def FnBanner():
+#   print (Fore.BLUE + "    ______  ______                       __        ______   " + Fore.RESET)
+#   print (Fore.CYAN + "   / / / / /_  __/_  ______  ____  ___  / / __    _\ \ \ \  " + Fore.RESET)
+#   print (Fore.GREEN + "  / / / /   / / / / / / __ \/ __ \/ _ \/ /_/ /___/ /\ \ \ \ " + Fore.RESET)
+#   print (Fore.RED + "  \ \ \ \  / / / /_/ / / / / / / /  __/ /_  __/_  __/ / / / " + Fore.RESET)
+#   print (Fore.YELLOW + "   \_\_\_\/_/  \__,_/_/ /_/_/ /_/\___/_/ /_/   /_/ /_/_/_/  " + Fore.RESET)
+#   print (Fore.MAGENTA + "                                                            " + Fore.RESET)
 
 def FnPrintMenu():
    print("")
@@ -55,6 +56,7 @@ def FnPrintMenu():
       usrInput = "u"  
 
    if usrInput.lower() == "u":     
+      PrintServerDetail()
       FnCheckStatus()
    elif usrInput.lower() == "s":   
       FnStartTunnle()
@@ -63,7 +65,8 @@ def FnPrintMenu():
    elif usrInput.lower() == "q":      
       sys.exit()
    elif usrInput.lower() == "h":
-      print("")
+      lib.clearScreen()
+      bannerlib.GetBanner()
       Fnhelp()       
       FnPrintMenu()
    else: 
@@ -133,14 +136,40 @@ def FnStartLocalTunnel(TunnleDict:dict):
    TName = TunnleDict["role_name"]
    Tlocal_port = TunnleDict["local_port"]
    TDestinationPort = TunnleDict["destination_port"]   
-   print (Style.BRIGHT + Fore.WHITE + "Tunneling Port [ " + Fore.CYAN + TDestinationPort + Fore.WHITE + " ] Server Destination [ " + Fore.CYAN + DestIP + Fore.WHITE + " ] to [ " + Fore.BLUE + Tlocal_port + Fore.WHITE + " ] Local Server(Bridge) (" + Fore.BLUE + ThisIP + Fore.WHITE + ") for [ " + Fore.BLUE + TName + Fore.WHITE + " ]" + Style.RESET_ALL )               
-   Command = "sudo ssh -NTC -o ServerAliveInterval=60 -o ExitOnForwardFailure=yes -f -N -p {SSHPort} {SSHUser}@{SSHIp} -L 0.0.0.0:{local_port}:0.0.0.0:{DestinationPort}"
+   print ( Fore.WHITE + "Tunneling Port [ " + Fore.CYAN + TDestinationPort + Fore.WHITE + " ] Server Destination [ " + Fore.CYAN + DestIP + Fore.WHITE + " ] to [ " + Fore.BLUE + Tlocal_port + Fore.WHITE + " ] This Server (Bridge) (" + Fore.BLUE + socket.gethostname() + Fore.WHITE + ") for [ " + Fore.BLUE + TName + Fore.WHITE + " ]" + Style.RESET_ALL )               
+   Command = "ssh -NTC -o ServerAliveInterval=60 -o ExitOnForwardFailure=yes -f -N -p {SSHPort} {SSHUser}@{SSHIp} -L 0.0.0.0:{local_port}:0.0.0.0:{DestinationPort}"
    Command = Command.format(SSHPort = DestPort, SSHUser = DestUser, SSHIp = DestIP, local_port = Tlocal_port, DestinationPort = TDestinationPort )
-   os.system(Command)                                        
+   xx = os.system(Command)                                        
+   ListofActiveTunel.update({TName:TunnleDict})
    Logit("start-local")
 
+def FnStartRemoteTunnel(TunnleDict:dict):
+   TName = TunnleDict["role_name"]   
+   Tlocal_port = TunnleDict["local_port"]
+   TDestinationPort = TunnleDict["destination_port"]      
+   print (Fore.WHITE + "Tunneling Port [ " + Fore.BLUE + Tlocal_port + Fore.WHITE + " ] This Server (UPSTREAM) [ " + Fore.BLUE + socket.gethostname() + Fore.WHITE + " ] to [ " + Fore.CYAN + TDestinationPort + Fore.WHITE + " ] Server Destination (" + Fore.CYAN + DestIP + Fore.WHITE + ") for [ " + Fore.CYAN + TName + Fore.WHITE + " ]" + Style.RESET_ALL )               
+   Command = "ssh -R {DestinationPort}:127.0.0.1:{local_port} -N -f -p {SSHPort} {SSHUser}@{SSHIp}"
+   Command = Command.format(DestinationPort = TDestinationPort, local_port = Tlocal_port, SSHPort = DestPort, SSHUser = DestUser, SSHIp = DestIP)
+   xx = os.system(Command)                                        
+   ListofActiveTunel.update({TName:TunnleDict})
+   Logit("start-remote")
 
 
+def GenerateReadyStr():   
+   a = len(ListofActiveTunel)
+   print("")
+   if a > 0:
+      for x in ListofActiveTunel:         
+         if RunInUpStream:
+            _dest = ListofActiveTunel[x]["destination_port"]
+            print(f"{_B}{_w}Use This Url [ {Back.GREEN}{_w} {DestIP} {_w}{Back.RESET} ] port [ {Back.GREEN}{_w} {_dest} {Back.RESET}{_w}]{_reset}")
+         else:
+            _local = ListofActiveTunel[x]["local_port"]
+            print(f"{_B}{_w}Use This Url [ {Back.GREEN}{_w} This server IP {_w}{Back.RESET} ] port [ {Back.GREEN}{_w} {_local} {Back.RESET}{_w} ]{_reset}")
+   elif len(ListofActiveTunel) == 0:
+      print(Style.BRIGHT + Fore.YELLOW + "Tunnel Key Empty")
+   else:
+      print(Style.BRIGHT + Fore.RED + "Error for tunnel key from json file")
 
 
 def FnStartTunnle():
@@ -149,30 +178,11 @@ def FnStartTunnle():
       a = len(ListOfTunnel)
       if a > 0:
          for x in ListOfTunnel:
-#            FnStartSingleTunnle(x)
             if RunInUpStream:
-               print("REMOTE")
+               FnStartRemoteTunnel(x)
             else:
                FnStartLocalTunnel(x)
-#            TName = x["role_name"]
-#            Tlocal_port = x["local_port"]
-#            TDestinationPort = x["destination_port"]
-#            Ttype = x["type"]
-#            TSSHIp = x["ssh_ip"]
-#            TSSHPort = x["ssh_port"]
-#            TSSHUser = x["ssh_user"]
-#            if Ttype == "local":
-#               print (Style.BRIGHT + Fore.WHITE + "Tunneling Port [ " + Fore.RED + TDestinationPort + Fore.WHITE + " ] Server [ " + Fore.RED + TSSHIp + Fore.WHITE + " ] to [ " + Fore.RED + Tlocal_port + Fore.WHITE + " ] server Local for [ " + Fore.BLUE + TName + Fore.WHITE + " ]" + Style.RESET_ALL )               
-#               Command = "sudo ssh -NTC -o ServerAliveInterval=60 -o ExitOnForwardFailure=yes -f -N -p {SSHPort} {SSHUser}@{SSHIp} -L 0.0.0.0:{local_port}:0.0.0.0:{DestinationPort}"
-#               Command = Command.format(SSHPort = TSSHPort, SSHUser = TSSHUser, SSHIp = TSSHIp, local_port = Tlocal_port, DestinationPort = TDestinationPort )
-#               os.system(Command)                                        
-#               Logit("start-local")
-#            elif Ttype == "remote":               
-#               print (Style.BRIGHT + Fore.WHITE + "Remote Tunneling port [ " + Fore.RED + Tlocal_port + Fore.WHITE + " ] local server to server [ " + Fore.RED + TSSHIp + Fore.WHITE + " ] port [ " + Fore.RED + TDestinationPort + Fore.WHITE + " ] for [ " + Fore.BLUE + TName + " ] " + Style.RESET_ALL)
-#               Command = "ssh -R 0.0.0.0:{DestinationPort}:127.0.0.1:{local_port} -N -f -p {SSHPort} {SSHUser}@{SSHIp}"
-#               Command = Command.format(DestinationPort = TDestinationPort, local_port = Tlocal_port, SSHPort = TSSHPort, SSHUser = TSSHUser, SSHIp = TSSHIp)
-#               os.system(Command)          
-#               Logit("start-remote")
+         GenerateReadyStr()      
       elif len(ListOfTunnel) == 0:
          print(Style.BRIGHT + Fore.YELLOW + "Tunnel Key Empty")
       else:
@@ -190,6 +200,10 @@ def FnCheckStatusTunnel(sshDict: dict):
       str = "{local_port}:0.0.0.0:{DestinationPort}"
       str = str.format(local_port = sshDict["local_port"], DestinationPort = sshDict["destination_port"])               
       TaTunnelType = Style.BRIGHT + "Local" + Style.RESET_ALL      
+   else:
+      str = "{DestinationPort}:127.0.0.1:{local_port}"   
+      str = str.format(local_port = sshDict["local_port"], DestinationPort = sshDict["destination_port"])
+      TaTunnelType = Style.BRIGHT + "Remote" + Style.RESET_ALL
    return [TaTunnelType,str]
 
 def FnCheckPID(tunnelRststr: str):
@@ -200,6 +214,8 @@ def FnCheckPID(tunnelRststr: str):
       return True
 
 def FnCheckStatus():
+   global ListofActiveTunel
+   ListofActiveTunel = {}
    try:
       ListOfTunnel = JsonConfig["tunnel"]
       a = len(ListOfTunnel)
@@ -218,20 +234,10 @@ def FnCheckStatus():
             Tlocal_port = x["local_port"]
             TDestinationPort = x["destination_port"]            
             SSHIp = DestIP
-#            if Ttype == "local":
-#               #str = "0.0.0.0:{local_port}:0.0.0.0:{DestinationPort}"
-#               str = "{local_port}:0.0.0.0:{DestinationPort}"
-#               str = str.format(local_port = Tlocal_port, DestinationPort = TDestinationPort)               
-#               TaTunnelType = Style.BRIGHT + "Local" + Style.RESET_ALL
-#            elif Ttype == "remote":
-#               str = "0.0.0.0:{DestinationPort}:127.0.0.1:{local_port}"
-#               str = str.format(local_port = Tlocal_port, DestinationPort = TDestinationPort)
-#               TaTunnelType = Style.BRIGHT + "Remote" + Style.RESET_ALL            
             tunnelRst = FnCheckStatusTunnel(x)
-            #pids = os.popen("ps ax | grep " + tunnelRst[1] + " | grep -v grep")                           
-            
             if FnCheckPID(tunnelRst[1]) :
                TaStatus = Style.NORMAL + Fore.WHITE + Back.GREEN + "Active" + Style.RESET_ALL               
+               ListofActiveTunel.update({TName:x})
             else:
                TaStatus = Style.NORMAL + Fore.WHITE + Back.RED + "Not active" + Style.RESET_ALL
          
@@ -241,6 +247,7 @@ def FnCheckStatus():
             TaDestPort =  Style.BRIGHT + TDestinationPort + Style.RESET_ALL
             _no += 1
             print ("{:<5}{:<20} {:<30} {:<20} {:<20} {:<30} {:<15}".format(_no,tunnelRst[0], TaTitle, TaIP, TaLocalport, TaDestPort, TaStatus))
+         GenerateReadyStr()   
 
    except KeyError:
       print(Style.BRIGHT + Fore.YELLOW + "Tunnel Key Not Found in jsonfile")
@@ -313,7 +320,7 @@ def FnKillAllProcess():
          FnPrintMenu() 
 
 def Logit(type):
-   global VarParameterMode
+   global VarParameterMode   
    if __name__ != "__main__":
       VarParameterMode = True      
 
@@ -346,17 +353,38 @@ def FnLogit(VactionName,Massege,Mode,Status):
 
 
 def Fnhelp():
-   InFo = """ This program can manage SSH tunnels between two Linux servers.
-   The information of the tunnels read from a json file.
-   This program can be run in UI and parameter mode (for scheduled execution)."""
+   InFo = f"""This program can manage SSH tunnels between two Linux servers, used for bypass limitations in highly restricted networks
+ - The information of the tunnels read from a json file with the name `config.json`.
+ - Run in tow method
+   * Upstream server is {_g}Not Blocked{_w}
+     in This method, the Tunnel-Managment software runs on the {_B}{_b}bridge server{_reset}{_w} and the bridge server must be able to connect to the upstream server      
 
-   print(Style.BRIGHT + Fore.WHITE + InFo + Style.RESET_ALL)
+         {bannerlib.GetInfoNetGraph("NormalMode-h")}
+
+     {_w}copy Tunnel-Managment software to the {_B}{_b}Bridge server{_reset}{_w} and set {_B}{_w}'upstream_is_Block'{_reset}{_w} parameter to {_B}{_w}'false'{_reset}{_w} in config file
+   
+     
+     
+     
+   * Upstream server is {_r}Blocked{_w}
+     If access to the {_B}{_c}upstream server{_reset}{_w} is blocked, but this server can connect to the {_B}{_b}bridge server{_reset}{_w}
+     in This method, the Tunnel-Managment software runs on the {_B}{_c}Upstream server{_reset}{_w} and this server must be able to connect to the {_B}{_b}bridge server{_reset}{_w}      
+
+         {bannerlib.GetInfoNetGraph("UpstreamMode-h")}
+
+     {_w}copy Tunnel-Managment software to the {_B}{_c}Upstrea server{_reset}{_w} and set {_B}{_w}'upstream_is_Block'{_reset}{_w} parameter to {_B}{_w}'true'{_reset}{_w} in config file
+"""
+   
+   bannerlib.GetInfoNetGraph("NormalMode",BrIP="This Server",UpIP=DestIP)
+   
+
+   print(Fore.WHITE + InFo + Style.RESET_ALL)
    print("")
-   print(Style.BRIGHT + Fore.WHITE + "Run without parameter [ " + Fore.BLUE + "tunnel++" + Fore.WHITE + "    ] for run in UI Mode" + Style.RESET_ALL)
-   print(Style.BRIGHT + Fore.WHITE + "Run with parameter    [ " + Fore.BLUE + "tunnel++ -s" + Fore.WHITE + " ] for start All tunnel/s" + Style.RESET_ALL)
-   print(Style.BRIGHT + Fore.WHITE + "Run with parameter    [ " + Fore.BLUE + "tunnel++ -u" + Fore.WHITE + " ] for Chek Status of tunnel/s" + Style.RESET_ALL)
-   print(Style.BRIGHT + Fore.WHITE + "Run with parameter    [ " + Fore.BLUE + "tunnel++ -d" + Fore.WHITE + " ] for Drop/kill all tunnel/s" + Style.RESET_ALL)
-   print(Style.BRIGHT + Fore.WHITE + "Run with parameter    [ " + Fore.BLUE + "tunnel++ -r" + Fore.WHITE + " ] for Restart ( Drop & Start) all tunnel/s" + Style.RESET_ALL)   
+   print(Fore.WHITE + "Run without parameter [ " + Fore.BLUE + "tunnel++" + Fore.WHITE + "    ] for run in UI Mode" + Style.RESET_ALL)
+   print(Fore.WHITE + "Run with parameter    [ " + Fore.BLUE + "tunnel++ -s" + Fore.WHITE + " ] for start All tunnel/s" + Style.RESET_ALL)
+   print(Fore.WHITE + "Run with parameter    [ " + Fore.BLUE + "tunnel++ -u" + Fore.WHITE + " ] for Chek Status of tunnel/s" + Style.RESET_ALL)
+   print(Fore.WHITE + "Run with parameter    [ " + Fore.BLUE + "tunnel++ -d" + Fore.WHITE + " ] for Drop/kill all tunnel/s" + Style.RESET_ALL)
+   print(Fore.WHITE + "Run with parameter    [ " + Fore.BLUE + "tunnel++ -r" + Fore.WHITE + " ] for Restart ( Drop & Start) all tunnel/s" + Style.RESET_ALL)   
 
 
 def CheckingRootPrivilage():
@@ -372,26 +400,25 @@ def GetRunMode():
    global RunInUpStream      
    RunInUpStream = lib.GetValue(JsonConfig,"upstream_is_Block")
    if RunInUpStream is False:            
-      bannerlib.PrintNetGraph("NormalMode",BrIP=ThisIP,UpIP=DestIP)
+      print(bannerlib.GetModeLabel("NormalMode"))
+      print("")
+      print(f"{_w}in {_y}Normal Mode{_w} , the SSH-Tunnel-Managment software runs on the {_B}{_b}bridge server{_reset}{_w}")
+      print("")
+      print(bannerlib.GetInfoNetGraph("NormalMode",BrIP="This Server",UpIP=DestIP))
       print("")      
-      print(f"{_w}in {_y}Normal Mode{_w} , the SSH-Tunnel-Managment software runs on the {_b}bridge server({ThisIP}){_w}. In this case, the bridge server must be able to connect to the {_c}upstream server{_w}.{_reset}")
-      print(f"{_w}If the upstream server is {_r}blocked{_w}, you can transfer the SSH-Tunnel-Managment software to the upstream server and change the execution method to the upstream block mode, for mor information {_g}use help{_reset}")
-   else:      
-      bannerlib.PrintNetGraph("UpstreamMode",BrIP=ThisIP,UpIP=DestIP)
-#      print("")
-#      print(f"{_B}{_w}if Upstream Server is Blocked :{_reset}")
-#      bannerlib.PrintNetGraph("BlockMode",BrIP=ThisIP,UpIP=DestIP)
-#      print(f"{_w}in {_r} Upstream Block {_w}Mode, the SSH-Tunnel-Managment software runs on the {_c}Upstream server({DestIP}){_w}. In this case, the Upstream server must be able to connect to the {_b}bridge server{_w}.{_reset}")            
-      #print(f"{_w}This method is used when you have a very severe restriction and the access to the {_c}upstream server{_w} is {_r}blocked{_reset}")
-   PrintServerDetail()      
+      print(f"{_w}In this case, the bridge server must be able to connect to the {_b}upstream server{_w}.{_reset}")
+      print(f"{_w}If the upstream server is {_r}blocked{_w}, you can Run the SSH-Tunnel-Managment software to the upstream server and change the execution method to the upstream block mode, for mor information {_g}use help{_reset}")
+   else:
+      print(bannerlib.GetModeLabel("UpstreamMode"))
+      print("")
+      print(f"{_w}in {_r}UPSREAM BLOCK MODE{_w} , the SSH-Tunnel-Managment software runs on the {_B}{_c}Upstream server{_reset}{_w}")
+      print("")
+      print(bannerlib.GetInfoNetGraph("UpstreamMode",BrIP="127.0.0.1",UpIP=DestIP))
+      print("")
+      print(f"{_w}In this case, the Upstream server must be able to connect to the {_c}bridge server{_w}.{_reset}")
+   #PrintServerDetail()      
 
 def PrintServerDetail():
-   print("")
-   print(f"{_w}This Server:")      
-   print(f" {_w}IP   : {_b}{ThisIP}{_reset}")
-   print(f" {_w}User : {_b}{ThisUser}{_reset}")
-   print(f" {_w}Port : {_b}{ThisPort}{_reset}")
-
    print("")
    print(f"{_w}Destination Server:")      
    print(f" {_w}IP   : {_c}{DestIP}{_reset}")
@@ -407,51 +434,57 @@ signal.signal(signal.SIGINT, handler)
 FnLoadJsonFile()
 
 RunInUpStream = ""
+ListofActiveTunel = {}
 
 if __name__ == "__main__":       
    import lib.BaseFunction as lib
    import lib.banner as bannerlib
-
-   ThisIP = JsonConfig['This_Server']['ip']
-   ThisPort = JsonConfig['This_Server']['port']
-   ThisUser = JsonConfig['This_Server']['user']
-
    DestIP = JsonConfig['Dest_Server']['ip']
    DestUser = JsonConfig['Dest_Server']['user']
    DestPort = JsonConfig['Dest_Server']['port']
 
-   a = {}  
+   #_debug = ['-s']
+   #sys.argv.extend(_debug)
+
+   
+   lib.clearScreen()
+   #if CheckingRootPrivilage() is True:
+   #   FnExit()
+
    if len(sys.argv) == 1:
-      ## Back To False ############################ !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      lib.clearScreen()
-      if CheckingRootPrivilage() is True:
-         FnExit()
       VarParameterMode = False      
       #FnBanner()
       bannerlib.GetBanner("splash")
       GetRunMode()
       FnPrintMenu()
-   else:
-      VarParameterMode = True      
-      for i in sys.argv:
-         if i.lower() == "-d":          
-            FnBanner()
-            FnKillAllProcess()
-         elif i.lower() == "-u":          
-            FnBanner()
-            FnCheckStatus()
-         elif i.lower() == "-s":
-            FnBanner()
-            FnStartTunnle()
-         elif i.lower() == "-r":
-            Logit("restart")
-            FnBanner()
-            FnKillAllProcess()          
-            FnStartTunnle()
-         elif i.lower() == "-h":
-            FnBanner()
-            Fnhelp()
-         else:
-            print(Style.BRIGHT + Fore.GREEN + "-h" + Fore.WHITE + " for Help")   
+   elif len(sys.argv) == 2:
+      VarParameterMode = True            
+      i = sys.argv[1]
+      if i.lower() == "-d":          
+         bannerlib.GetBanner("splash")
+         GetRunMode()
+         FnKillAllProcess()
+      elif i.lower() == "-u":          
+         bannerlib.GetBanner("splash")
+         GetRunMode()
+         PrintServerDetail()
+         FnCheckStatus()
+      elif i.lower() == "-s":
+         bannerlib.GetBanner("splash")
+         GetRunMode()
+         print("")
+         FnStartTunnle()
+      elif i.lower() == "-r":
+         Logit("restart")
+         bannerlib.GetBanner("splash")
+         GetRunMode()
+         FnKillAllProcess()          
+         FnStartTunnle()
+      elif i.lower() == "-h":
+         lib.clearScreen()
+         bannerlib.GetBanner("splash")
+         Fnhelp()
+      else:
+         print(Style.BRIGHT + Fore.GREEN + "-h" + Fore.WHITE + " for Help")   
 
 

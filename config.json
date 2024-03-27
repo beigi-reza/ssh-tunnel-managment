@@ -1,12 +1,7 @@
 {
     "title": "SSH Tunnel Managent",
     "logfile": "/home/beigi/ssh-tunnle.log",
-    "upstream_is_Block": true,
-    "This_Server":{
-        "ip" : "10.1.8.46",
-        "user" : "root",
-        "port" : "22"
-    },
+    "upstream_is_Block": false,    
     "Dest_Server":{
         "ip" : "10.1.8.180",
         "user" : "root",
@@ -14,13 +9,13 @@
     },
     "tunnel": [
         {
-            "role_name": "WebSITE",
-            "local_port": "81",
+            "role_name": "Mongo EXpress",
+            "local_port": "9091",
             "destination_port": "8081"
         },
         {
-            "role_name": "TMS",
-            "local_port": "82",
+            "role_name": "Test Nginx",
+            "local_port": "9092",
             "destination_port": "8082"
         }
 
