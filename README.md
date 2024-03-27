@@ -40,9 +40,9 @@ for Use this program (solution), you need this:
 
 ### Bridge server access to the upstream server
 
-`
+```
 (Client) <-> [ Bridge Server ] <-> [ Upstream Server ] <-> (Internet)
-`
+```
 
 in This method, the Tunnel-Managment software runs on the **bridge server** and the bridge server must be able to ssh access to the upstream server
 
@@ -59,9 +59,9 @@ in `config.json` parameter `upstream_is_Block` set **`false`**
 
 **use this method.**
 
-`
+```
 (Client) <-> [ Bridge Server ] <-X [ Upstream Server ] <-> (Internet)
-`
+```
 in This method, the Tunnel-Managment software runs on the **Upstream server** and must be able to ssh access to the bridge server 
 
 in `config.json` parameter `upstream_is_Block` set **`true`**
