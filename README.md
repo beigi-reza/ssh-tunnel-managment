@@ -57,8 +57,6 @@ in `config.json` parameter `upstream_is_Block` set **`false`**
 - If upstream server is blocked 
 - If connect to upstream, it will be blocked
 
-**use this method.**
-
 ```
 (Client) <-> [ Bridge Server ] <-X [ Upstream Server ] <-> (Internet)
 ```
@@ -79,15 +77,11 @@ Update Detination Server ssh config in File `config.json` section `Dest_Server`
 
 ```json
 {
-  .
-  .
     "Dest_Server":{
         "ip" : "10.1.8.180",
         "user" : "root",
         "port" : "22"
     },
-  .
-  .
 }
 ```
 
@@ -107,9 +101,11 @@ Add this section once for each (tunnel) port
         }
 ```
 
-if parameter `upstream_is_Block` set `false`
+- if parameter `upstream_is_Block` set `false`
 
-`local_port` server Bridge bind to `destination_port` server Upstream
+```
+(Client) <--> [ Bridge Server:Local_port ] --> [ Upstream Server:destination_port ] <-> (Internet)
+```
 
 if parameter `upstream_is_Block` set `true`
 
