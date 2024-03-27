@@ -113,31 +113,22 @@ if parameter `upstream_is_Block` set `true`
 [ Bridge Server:Local_port ] <-- [ Upstream Server:destination_port ]
 ```
 
+### Update Config Path
+
+open `sshTunnel.py` and  replace `<JSPATH>` with real path of `config.json`
 
 
-
-open `tu++.py` and  replace `<JSPATH>` with real path of `config.json`
-
-```bash
-vim tu++.py
-```
-
-find & Replace it 
-
-```
-JsFilePath = "<JSPATH>/config.json"
-```
-Save & Exit
-
-run `tu++.py` on conole
+## Run 
+run `sshTunnel.py` on conole
 
 ```bash
-cd ssh-tunnel
-./tu++.py
+cd ssh-tunnel-managment
+./sshTunnel.py
 ```
 - **u** : Status
 - **s** : Start
 - **d** : Drop/Kill
+- **h** : help
 
 ## Run SSH-tunnel with parameter
 
@@ -160,6 +151,6 @@ crontab -e
 add this line for restart(Kill & Start) tunnel every 4 hours
 
 ```
-0 */4 * * *  /usr/bin/python3 /root/ssh-tunnel/tu++.py -r
+0 */4 * * *  /usr/bin/python3 /root/ssh-tunnel-managment/sshTunnel.py -r
 ```
 
