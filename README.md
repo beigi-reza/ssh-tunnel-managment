@@ -13,21 +13,6 @@ for Use this program (solution), you need this:
 - One of Server access to another
 - The connection between the two servers must be a key so that SSH connections.
 
-# Table of contents
-
-- Terminology
-- Methods
-  - [Run on Bridge Server](#run-on-bridge-server)
-  - [Run on Upstream Server](#run-on-upstream-server)
-    - [Step - 1 Run on Upstream Server](#step-1-run-on-upstream-server)
-    - [Step - 2 Run on Bridge Server](#step-2-run-on-bridge-server)
-- Prerequisite  
-  - [setup ssh passwordless login](#setup-ssh-passwordless-login)
-- Run
-  - [Run SSH-tunnel](#run-ssh-tunnel)
-  - [Run SSH-tunnel with parameter](#run-ssh-tunnel-with-parameter)
-- [Scheduled SSH-Tunnel](#scheduled-ssh-tunnel)
-
 
 ## Terminology
 
@@ -110,7 +95,7 @@ Add this section once for each (tunnel) port
 if parameter `upstream_is_Block` set `true`
 
 ```
-[ Bridge Server:Local_port ] <-- [ Upstream Server:destination_port ]
+[ Bridge Server:destination_port ] <-- [ Upstream Server:local_port ]
 ```
 
 ### Update Config Path
@@ -138,7 +123,6 @@ cd ssh-tunnel-managment
 - `tu++.py` `-d` for Drop/kill all tunnel/s
 - `tu++.py` `-r` for Restart ( Drop & Start) all tunnel/s
 
-
 # Scheduled SSH-Tunnel
 
 It is possible that the SSH tunnels will be closed after some time and the servers will be disconnected, or the servers will be detected due to the long duration of a tunnel.
@@ -153,4 +137,3 @@ add this line for restart(Kill & Start) tunnel every 4 hours
 ```
 0 */4 * * *  /usr/bin/python3 /root/ssh-tunnel-managment/sshTunnel.py -r
 ```
-
