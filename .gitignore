@@ -2,7 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+#conf/config.json
+conf/tunnel.json
+logs
+key
 # C extensions
 *.so
 
@@ -14,7 +17,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+#lib/
 lib64/
 parts/
 sdist/

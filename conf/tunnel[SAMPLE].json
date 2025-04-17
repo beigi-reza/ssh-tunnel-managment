@@ -1,0 +1,43 @@
+{    
+    "tunnel": [
+        {
+            "Name": "Outline Manager",
+            "Code": "otl",
+            "ssh_ip" : "194.146.123.231",
+            "ssh_user" : "root",
+            "ssh_port" : "3580",            
+            "FinalPort": "8100",
+            "Source_Server": "localhost",
+            "Source_port": "8354",
+            "Type" : "local",
+            "Keep_Alive": true,
+            "Highly_Restricted_Networks":{
+                "Enable" : false,
+                "ExitOnForwardFailure" :"yes",
+                "ServerAliveInterval":60,
+                "ServerAliveCountMax":3,
+                "MonitorPort": 2000
+            }                
+        },
+        {
+            "Name": "SSH - ACCESS Server EN",
+            "Code": "En",
+            "ssh_ip" : "194.146.123.231",
+            "ssh_user" : "root",
+            "ssh_port" : "3580",            
+            "FinalPort": "8200",
+            "Source_Server": "localhost",
+            "Source_port": "3580",
+            "Type" : "remote",
+            "Keep_Alive": false,
+            "Highly_Restricted_Networks":{
+                "Enable" : true,
+                "ExitOnForwardFailure" :"yes",
+                "ServerAliveInterval":60,
+                "ServerAliveCountMax":3,
+                "MonitorPort": 2001
+            }        
+        }
+
+    ]
+}

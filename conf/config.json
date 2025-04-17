@@ -1,0 +1,7 @@
+{
+    "def_ssh_port": "22",
+    "def_ssh_user": "root",
+    "def_ssh_key": "",
+    "Tag_View": false,
+    "SSHKEY": "/root/MySshTools/key/id_rsa"
+}
