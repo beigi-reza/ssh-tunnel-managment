@@ -122,7 +122,7 @@ nano /etc/ssh/sshd_config
 ```
 و مقدار `GatewayPorts` را در فایل پیدا کرده و مقدار آن را به `true` تغییر دهید 
 
-```conf
+```config
 #AllowAgentForwarding yes
 #AllowTcpForwarding yes
 GatewayPorts yes
@@ -136,7 +136,7 @@ PrintMotd no
 
 و سپس سرویسی ssh را مجددا راه اندازی کنید
 
-‍‍‍```bash
+```bash
 systemctl restart sshd
 ```
 
