@@ -143,6 +143,12 @@ ssh-copy-id -i key/id_rsa.pub <USER>@<IP>
 ./tunnel.py
 ```
 
-![MainMenu](docs/MainMenu.png)
+<p align="center">
+    <img src="docs/MainMenu.png" style="width:30%; height:auto;">
+</p>
 
+برای استارت همه توتل ها کلید s را بزنید 
 
+<p align="center">
+    <img src="docs/MainMenu-started.png" style="width:30%; height:auto;">
+</p>
