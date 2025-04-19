@@ -13,8 +13,8 @@ import psutil
 current_directory = os.path.dirname(os.path.realpath(__file__))
 JsonListFile = os.path.join(current_directory,'conf/config.json')
 JsonConfig = lib.BaseFunction.LoadJsonFile(JsonListFile)
-SSHKEY = lib.BaseFunction.GetValue(JsonConfig,"SSHKEY",verbus=False,ReturnValueForNone='')
-
+SSHKEYFile = lib.BaseFunction.GetValue(JsonConfig,"SSHKEY",verbus=False,ReturnValueForNone='')
+SSHKEY = os.path.join(current_directory,'key',SSHKEYFile)
 TunnelDict = os.path.join(current_directory,'conf/tunnel.json')
 TUNNEL_Json = lib.BaseFunction.LoadJsonFile(JsonFile=TunnelDict,Verbus=False,ReternValueForFileNotFound={})
 
@@ -63,9 +63,10 @@ _bEx_m = "[105m"
 
 if os.path.exists(SSHKEY) == False:
     lib.BaseFunction.clearScreen()
-    lib.Logo.SshToolsLogo()
+    print('\n\n')
+    lib.Logo.sshTunnel()
     lib.AsciArt.BorderIt(Text=f'canot find the SSH key File ({SSHKEY})',BorderColor=_fr,TextColor=_fw)
-    lib.BaseFunction.FnExit(1)
+    lib.BaseFunction.FnExit()
 
 
 ######################################################
