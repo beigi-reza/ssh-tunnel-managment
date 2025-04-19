@@ -193,6 +193,8 @@ sudo pacman -S autossh
 
 در تنظیمات تونل تغییرات زیر را اعمال کنید
 
+در بخش `Highly_Restricted_Networks` گزینه `Enable` را `true` کنید 
+
 ```json
         {
             "Name": "Tunnel Name 2",
@@ -214,15 +216,12 @@ sudo pacman -S autossh
             }                
 ```
 
-در بخش `Highly_Restricted_Networks` گزینه `Enable` را `true` کنید 
-
-
 ### مانیتور کردن پورت 
-اگر امکان دسترسی به پورت های دیگری در سرور مقصد دارید یک پورت دیگر را برای تونل تخصیص دهید و در بخش MonitorPort وارد کنید . 
+اگر امکان دسترسی به پورت های دیگری در سرور مقصد دارید یک پورت دیگر را برای تونل تخصیص دهید و در بخش `MonitorPort` وارد کنید . 
 دقت کنید این پورت در سرور مقصد باز شده و بایدبرای هر تونل  اختصاصی باشد 
-مقدار 0 این گزینه را غبر فعال می کند
+مقدار `0` این گزینه را غبر فعال می کند
 
-```bash
+```json
 {
     ..
     ..    
@@ -234,3 +233,76 @@ sudo pacman -S autossh
         "ServerAliveCountMax":3,
         "MonitorPort": 2100    
 }
+```
+
+## زنده نگهداشتن تونل در هر شرایط
+
+در صورت راه اندازی سرویس `keep-alive` تونل های برقرار شده تحت هر شرایطی فعال نگه داشته خواهند شد، حتا با راه اندازی مجدد و یا بسته شدن تونل توسط کاربر تونل مجددا فعال خواهد شد.
+تنها راه غیر متوقف کردن تونل ها توقف سرویس `keep-alive`خواهد بود.
+
+برای اینکه یک تونل در حالت `keep-alive` نگهداشته شود، گزینه `keep-live` در تنظیمات آن باید در حالت `true` باشد
+
+
+```json
+        {
+            ..
+            ...
+            "Source_port": "3124",
+            "Type" : "remote",
+            "Keep_Alive": true,
+            ..
+            ..
+        }
+```
+
+### فعال کردن سرویس keep-alive
+
+یک شاخه به نام logs در مسیر اصلی نرم افزار ایجاد کنید
+
+```bash
+mkdir logs
+```
+
+یک فایل به نام `keep-alive.service` در مسیر `/etc/systemd/system/` ایجاد کنید 
+
+
+```bash
+nano /etc/systemd/system/keep-alive.service
+```
+
+خطوط آن را به آن اضافه کنید و در صورت لزوم مسیر نرم افزار را اصلاح کنید
+
+```
+[Unit]
+Description=Keep Alive Service
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/root/ssh-tunnel-managment
+ExecStart=/usr/bin/python3 /ssh-tunnel-managment/keep-alive.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+```
+
+سرویس را فعال کنید 
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable keep-alive.service
+```
+
+و برای راه اندازی
+
+```bash
+sudo systemctl start keep-alive.service
+```
+
+برای بررسی وضعیت تونل ها می توانید فایل `tunnel.py` را اجرا کنید و یا از فایل `KeepAlivelog.csv` ایجاد شده در شاخه لاگ مراجه کنید
+
+```bash
+tail -f logs/KeepAlivelog.csv
+```
