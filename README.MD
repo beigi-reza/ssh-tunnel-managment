@@ -40,10 +40,11 @@ Client <-> Bridge Server <-> Upstream Server <-> Internet
              ⬆️ ⬆️ ⬆️
  ```
 
-فایل tunnel.json را اصلاح کرده و یک سکشن مشابه مثال زیر در آن ایجاد کنید 
+فایل `conf/tunnel.json` را اصلاح کرده و یک سکشن مشابه مثال زیر در آن ایجاد کنید 
+
 ```json
         {
-            "Name": "Tunnel Name",
+            "Name": "Tunnel Name 1",
             "Code": "t1",
             "ssh_ip" : "192.168.1.1",
             "ssh_user" : "root",
@@ -62,16 +63,45 @@ Client <-> Bridge Server <-> Upstream Server <-> Internet
             }                
 ```
 
-- `ssh_ip`: آی پی سرور بالادستی
-- `ssh_user`: نام کاربری اس اس اچ
-- `ssh_port`: پورت اس اس اچ
-- `Source_port`: پورت مبدا که می خواهیم در اختیار کاربران قرار گیرد
-- `FinalPort`: پورتی که در نهایت در سرور رابط در اختار کاربران خواهد بود 
-
 ## اتصال ریموت (Remote)
 
 اگر سرور رابط در اتصال به سرور بالادستی مشکل دارد و یا آی پی سرور بالادستی فیلتر و یا بلاک شده است باید از اتصال ریموت استفاده کرد، 
 در این روش نرم افزار در سرور بالادستی قرار گرفته و اتصال را با سرور رابط برقرار کرده و پورت نهایی در سرور رابط در اختیار کاربر قرار می گیرد 
 
+```
+Client <-> Bridge Server <-> Upstream Server <-> Internet
+                                ⬆️ ⬆️ ⬆️
+ ```
 
 
+فایل `conf/tunnel.json` را اصلاح کرده و یک سکشن مشابه مثال زیر در آن ایجاد کنید 
+
+```json
+        {
+            "Name": "Tunnel Name 2",
+            "Code": "t2",
+            "ssh_ip" : "192.168.2.2",
+            "ssh_user" : "root",
+            "ssh_port" : "22",            
+            "FinalPort": "3124",
+            "Source_Server": "localhost",
+            "Source_port": "3124",
+            "Type" : "remote",
+            "Keep_Alive": true,
+            "Highly_Restricted_Networks":{
+                "Enable" : false,
+                "ExitOnForwardFailure" :"yes",
+                "ServerAliveInterval":60,
+                "ServerAliveCountMax":3,
+                "MonitorPort": 2000
+            }                
+```
+
+- `Name`: نام تونل (این نام در لاگ ها و اطلاعات نمایش دادخ خواهد شد)
+- `Code`: کد تونل (برای صدا زندن این تونل از این کد استفاده خواهد شد)
+- `ssh_ip`: آی پی سرور مقصد (در حالت لوکال آی پی سرور بالادستی و در حالت ریموت آی پی سرور رابط)
+- `ssh_user`: نام کاربری اس اس اچ
+- `ssh_port`: پورت اس اس اچ
+- `Source_port`: پورتی که می خواهیم در اختیار کاربران قرار گیرد
+- `FinalPort`: پورتی که در نهایت در سرور رابط در اختار کاربران خواهد بود 
+- `Type`: مدل اتصال را مشخص می کند 
