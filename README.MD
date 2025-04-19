@@ -6,7 +6,10 @@
 این برنامه می تواند محدودیت های شدید شبکه را دور بزند و دسترسی کاربر را به اینترنت آزاد مقدور سازد
 
 
+## پیش نیاز ها
 
+- پایتون نگارش 3.1
+- فرمان autossh (برای حالت پیشرفته)
 
 ## اصطلاحات
 -  سرور ها و نقش آنها
@@ -34,9 +37,36 @@ Client <-> Bridge Server <-> Upstream Server <-> Internet
 
 ```
 Client <-> Bridge Server <-> Upstream Server <-> Internet
-              ⬆⬆  ⬆ ⬆️
+             ⬆️ ⬆️ ⬆️
+ ```
+
+فایل tunnel.json را اصلاح کرده و یک سکشن مشابه مثال زیر در آن ایجاد کنید 
+```json
+        {
+            "Name": "Tunnel Name",
+            "Code": "t1",
+            "ssh_ip" : "192.168.1.1",
+            "ssh_user" : "root",
+            "ssh_port" : "22",            
+            "FinalPort": "3124",
+            "Source_Server": "localhost",
+            "Source_port": "3124",
+            "Type" : "local",
+            "Keep_Alive": true,
+            "Highly_Restricted_Networks":{
+                "Enable" : false,
+                "ExitOnForwardFailure" :"yes",
+                "ServerAliveInterval":60,
+                "ServerAliveCountMax":3,
+                "MonitorPort": 2000
+            }                
 ```
 
+- `ssh_ip`: آی پی سرور بالادستی
+- `ssh_user`: نام کاربری اس اس اچ
+- `ssh_port`: پورت اس اس اچ
+- `Source_port`: پورت مبدا که می خواهیم در اختیار کاربران قرار گیرد
+- `FinalPort`: پورتی که در نهایت در سرور رابط در اختار کاربران خواهد بود 
 
 ## اتصال ریموت (Remote)
 
