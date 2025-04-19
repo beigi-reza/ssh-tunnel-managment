@@ -160,8 +160,77 @@ ssh-copy-id -i key/id_rsa.pub <USER>@<IP>
 برای مشاهده جزییات یک کلبد و تغییر وضعیت آن کد آن را در منوی اصلی وارد کنید
 
 <p align="center">
-    <img src="docs/tunnel-detail.png" style="width:40%; height:auto;">
+    <img src="docs/tunnel-detail.png" style="width:50%; height:auto;">
 </p>
 
 
+##  حالت محدودیت شدید شبکه
 
+ در حالت معمولی نیز این نرم افزار از تونل های بر قرار شده در برابر اختلالات شبکه محافظت می کند ولی اگر با اختلالات شدید شبکه روبرو هستید و بنا به تنظیمات انجام شده در سطج ارائه دهنده خدمات و یا زیر ساخت اتصالات تونل پس از مدتی قطع می شوند بهتر است حالت `محدودیت شدید شبکه` را فعال کنید 
+
+## فعال سازی حالت محدودیت شدید شبکه
+
+نرم افزار autossh را بر روی سرور نصب کنید
+
+
+in Debian/Ubuntu
+
+```bash
+sudo apt update
+sudo apt-get install autossh
+```
+
+in Fedora/Centos/RHEL
+
+```bash
+sudo yum install autossh
+```
+
+in Arch Linux
+```bash
+sudo pacman -S autossh
+```
+
+در تنظیمات تونل تغییرات زیر را اعمال کنید
+
+```json
+        {
+            "Name": "Tunnel Name 2",
+            "Code": "t2",
+            "ssh_ip" : "192.168.2.2",
+            "ssh_user" : "root",
+            "ssh_port" : "22",            
+            "FinalPort": "3124",
+            "Source_Server": "localhost",
+            "Source_port": "3124",
+            "Type" : "remote",
+            "Keep_Alive": true,
+            "Highly_Restricted_Networks":{
+                "Enable" : true,
+                "ExitOnForwardFailure" :"yes",
+                "ServerAliveInterval":60,
+                "ServerAliveCountMax":3,
+                "MonitorPort": 
+            }                
+```
+
+در بخش `Highly_Restricted_Networks` گزینه `Enable` را `true` کنید 
+
+
+### مانیتور کردن پورت 
+اگر امکان دسترسی به پورت های دیگری در سرور مقصد دارید یک پورت دیگر را برای تونل تخصیص دهید و در بخش MonitorPort وارد کنید . 
+دقت کنید این پورت در سرور مقصد باز شده و بایدبرای هر تونل  اختصاصی باشد 
+مقدار 0 این گزینه را غبر فعال می کند
+
+```bash
+{
+    ..
+    ..    
+    "Keep_Alive": true,
+    "Highly_Restricted_Networks":{
+        "Enable" : true,
+        "ExitOnForwardFailure" :"yes",
+        "ServerAliveInterval":60,
+        "ServerAliveCountMax":3,
+        "MonitorPort": 2100    
+}
