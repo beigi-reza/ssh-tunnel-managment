@@ -144,11 +144,24 @@ ssh-copy-id -i key/id_rsa.pub <USER>@<IP>
 ```
 
 <p align="center">
-    <img src="docs/MainMenu.png" style="width:30%; height:auto;">
+    <img src="docs/MainMenu.png" style="width:40%; height:auto;">
 </p>
 
-برای استارت همه توتل ها کلید s را بزنید 
+برای استارت همه توتل ها کلید `s` را بزنید 
 
 <p align="center">
-    <img src="docs/MainMenu-started.png" style="width:30%; height:auto;">
+    <img src="docs/MainMenu-started.png" style="width:40%; height:auto;">
 </p>
+
+برای توقف همه تونل ها کلید `d` را بزنید 
+
+### مدیریت تونل ها
+
+برای مشاهده جزییات یک کلبد و تغییر وضعیت آن کد آن را در منوی اصلی وارد کنید
+
+<p align="center">
+    <img src="docs/tunnel-detail.png" style="width:40%; height:auto;">
+</p>
+
+
+
