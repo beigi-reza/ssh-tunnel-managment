@@ -114,7 +114,7 @@ Client <-> Bridge Server <-> Upstream Server <-> Internet
 ```bash
 git clone https://github.com/beigi-reza/ssh-tunnel-managment
 ```
-این برنامه برای اتصال بین سرور ها و بالا بردن امنیت از کلید اس اس اچ به جای کلمه عبور استفاده می کند.
+این برنامه برای اتصال بین سرور ها و بالا بردن امنیت از `SSH_KEY` به جای کلمه عبور استفاده می کند.
 
 ### ایجاد کلید
 
@@ -129,10 +129,20 @@ mkdir key
 ```bash
 ssh-keygen -t rsa -b 4096 -f key/id_rsa -C "ssh-tunnel-managment"
 ```
-اضافه کردن کلید عمومی به سرور مفصد 
+اضافه کردن کلید عمومی به سرور مقصد 
 
-‍‍‍```bash
+```bash
 ssh-copy-id -i key/id_rsa.pub <USER>@<IP>
 ```
+
+## اجرا
+
+از مسیر اصلی فایل `tunnel.py` را اجرا کنید 
+
+```bash
+./tunnel.py
+```
+
+![MainMenu](docs/MainMenu.png)
 
 
