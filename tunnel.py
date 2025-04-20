@@ -689,6 +689,15 @@ if __name__ == "__main__":
             printTunnelList()
             print('\n')
             lib.BaseFunction.FnExit()
+        elif sys.argv[1] in ['-r','--restart','--reload']:
+            DropAllSShTunnel()
+            StartAllTunnel()
+            lib.BaseFunction.clearScreen()
+            lib.Logo.sshTunnel()
+            printTunnelList()
+            print('\n')
+            lib.BaseFunction.FnExit()
+
         elif sys.argv[1] in ['-h','--help']:            
             lib.BaseFunction.clearScreen()
             lib.Logo.sshTunnel()
