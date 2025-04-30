@@ -27,10 +27,6 @@
 ## هدف اتصال
 هدف ما از اجرای این سناریو این است که در نهایت یک و یا چند پورت سرور بالادستی در سرور پل در اختیار کاربر قرار گیرد که از طریق آن به اینترنت آزاد دسترسی داشته باشند.
 
-```
-Client <-> Bridge Server <-> Upstream Server <-> Internet
-```
-
 بسته به روش و شرایط شبکه یکی از روش ها را انتخاب کنید
 
 ### اتصال محلی (Local)
@@ -39,33 +35,10 @@ Client <-> Bridge Server <-> Upstream Server <-> Internet
 
 >اگر احتمال می دهید که با برقراری ارتباط امکان بلاک شدن آی پی سرور بالادستی وجود دارد، برای اتصال از نوع ریموت استفاده کنید
 
-```
-Client <-> Bridge Server <-> Upstream Server <-> Internet
-             ⬆️ ⬆️ ⬆️
- ```
+<p align="center">
+    <img src="docs/Local-Tunnel.png" style="width:50%; height:auto;">
+</p>
 
-فایل `conf/tunnel.json` را اصلاح کرده و یک سکشن مشابه مثال زیر در آن ایجاد کنید 
-
-```json
-        {
-            "Name": "Tunnel Name 1",
-            "Code": "t1",
-            "ssh_ip" : "192.168.1.1",
-            "ssh_user" : "root",
-            "ssh_port" : "22",            
-            "FinalPort": "3124",
-            "Source_Server": "localhost",
-            "Source_port": "3124",
-            "Type" : "local",
-            "Keep_Alive": true,
-            "Highly_Restricted_Networks":{
-                "Enable" : false,
-                "ExitOnForwardFailure" :"yes",
-                "ServerAliveInterval":60,
-                "ServerAliveCountMax":3,
-                "MonitorPort": 2000
-            }                
-```
 
 ## اتصال ریموت (Remote)
 
