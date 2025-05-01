@@ -62,6 +62,7 @@
     <img src="docs/Remote-Tunnel.png" style="width:70%; height:auto;">
 </p>
 
+> در صورت استفاده از این روش حتما باید گزینه [getway port](#فعال-کردن-گزینه-gatewayports-در-سرور-رابط)  در سرور مقصد مقصد (رابط) فعال یاشد
 
 ### تونل پویا (Dynamic)
 
@@ -108,6 +109,9 @@ ssh-copy-id -i key/id_rsa.pub <USER>@<IP>
 ```bash
 ./tunnel.py
 ```
+
+###  ایجاد تونل
+
 <p align="center">
     <img src="docs/c1.png" style="width:40%; height:auto;">
 </p>
@@ -119,6 +123,7 @@ ssh-copy-id -i key/id_rsa.pub <USER>@<IP>
     <img src="docs/c2.png" style="width:40%; height:auto;">
 </p>
 
+
 اطلاعات ssh  سرور مقصد را وارد کنید.
 
 - SSH IP
@@ -129,6 +134,9 @@ ssh-copy-id -i key/id_rsa.pub <USER>@<IP>
 <p align="center">
     <img src="docs/c3.png" style="width:40%; height:auto;">
 </p>
+
+
+#### مبدا و یا نقطه شروع تونل
 
 
 اطلاعات آدرس مبدا تونل را وارد کنید.
@@ -152,6 +160,7 @@ ssh-copy-id -i key/id_rsa.pub <USER>@<IP>
     <img src="docs/c5.png" style="width:40%; height:auto;">
 </p>
 
+> اگر نوع تونل را remote  انتخاب کرده اید فراموش نکنید که گزینه [GatewayPorts](#فعال-کردن-گزینه-gatewayports-در-سرور-رابط)  را در سرور رابط فعال کرده باشید.
 
 #### فعال سازی حالت محدودیت شدید شبکه
  در حالت معمولی این نرم افزار از تونل های بر قرار شده در برابر اختلالات شبکه محافظت می کند ولی اگر با اختلالات شدید شبکه روبرو هستید و یا به دلیل تنظیمات انجام شده در سطج ارائه دهنده خدمات و یا زیر ساخت اتصالات تونل پس از مدتی قطع می شوند بهتر است حالت `محدودیت شدید شبکه` را فعال کنید 
