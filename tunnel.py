@@ -98,7 +98,7 @@ def MainMenu(Msg = ''):
             print(f'{_fw}( {_fb}r {_fw}) Restart all Tunnel{_reset}')            
             print(f'{_fw}( {_fy}* {_fw}) Enter tunnel {_fy}code{_fw} for Tunnel Detail{_reset}')
         print(f'\n{_D}q for quit{_reset}')        
-        UserInput = input(f'{_B}{_fw}Enter Command >  {_reset}')
+        UserInput = input(f'{_B}{_fw}Enter Command >  {_reset}')        
         if UserInput.strip().lower() in commandList:
             if UserInput.strip().lower() == 'q':
                 lib.BaseFunction.FnExit()
@@ -413,10 +413,15 @@ def PrintTunnelDetailsOnCreateTunnel(TunnelDict):
 
 
 def ViewTunnleStatus(TunnelDict,OnNewSession=True):
+    Msg = ''
     while True:
         rst = CheckStatusTunnel(TunnelDict)
         lib.BaseFunction.clearScreen()
         lib.Logo.sshTunnel()    
+        if Msg != '':
+            print("")
+            lib.AsciArt.BorderIt(Text=Msg,BorderColor=_fr,TextColor=_fy)
+            Msg = ''            
         if rst[0]:
             print(f'\nTunnel is : {_fw}{_bg} READY {_reset}')
             print(f"\nTunnel {_fb}{TunnelDict['Name']}{_fw} is running with PID : {_by}{_fbl} {rst[1]} {_reset}")            
@@ -496,7 +501,9 @@ def ViewTunnleStatus(TunnelDict,OnNewSession=True):
                 if rst[0]:
                     KillProcessByPID(rst[1])
                 else:    
-                    FnStartTunnel(TunnelDict,StartNewSession=OnNewSession)                    
+                    _rst = FnStartTunnel(TunnelDict,StartNewSession=OnNewSession)
+                    if _rst[0] is False:
+                        Msg = f'Error starting tunnel {TunnelDict["Name"]} >> {_rst[1]}'                        
             elif UserInput == 'd':        
                 _confirm = input(f'\n{_fr}Are you sure you want to delete the tunnel? [ Y / N ] > {_reset}')
                 if _confirm.lower().strip() in ['y','yes']:
@@ -510,11 +517,20 @@ def ViewTunnleStatus(TunnelDict,OnNewSession=True):
 
 
 def StartAllTunnel():
+    MsgList = []
     for _ in TUNNEL_LIST:
         if CheckStatusTunnel(_)[0]:
             print(f"Tunnel {_['Name']} is already running.")
         else:
-            FnStartTunnel(_)
+            _Rst = FnStartTunnel(_)
+            if _Rst[0] is False:
+                MsgList.append(f"Tunnel {_['Name']} is not started >> {_Rst[1]}")
+    if MsgList != []:        
+        for _ in MsgList:
+            lib.AsciArt.BorderIt(Text=_,BorderColor=_fr,TextColor=_fw)
+        print()
+        lib.BaseFunction.PressEnterToContinue()
+
 
 def DropAllSShTunnel():
     for _ in TUNNEL_LIST:                        
@@ -701,7 +717,7 @@ def RunAsRoot():
 def CreateCommamd(TunnleDict,TypeOfTunnel):        
     Highly_Restricted_Networks = TunnleDict["Highly_Restricted_Networks"].get('Enable',False)
     if Highly_Restricted_Networks: 
-        _sshCommandMode = 'autossh'        
+        _sshCommandMode = 'autossh'
     else:    
         _sshCommandMode = 'ssh'
 
