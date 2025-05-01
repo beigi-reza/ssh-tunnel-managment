@@ -5,7 +5,7 @@ __pycache__/
 #conf/config.json
 conf/tunnel.json
 logs
-key
+key/id_rsa
 # C extensions
 *.so
 

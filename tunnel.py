@@ -182,7 +182,7 @@ def CreateTunnle(Mode = None,Msg = ''):
     _Source_port = ''
     _FinalPort = ''
     _Type = ''
-    _Keep_Alive = False
+    _Keep_Alive = ''
     _Highly_Restricted_Networks_Enable = ''
     _monitorPort = ''    
     TunnelDict = {
@@ -336,6 +336,27 @@ def CreateTunnle(Mode = None,Msg = ''):
                     Msg = f'Invalid Monitor Port, Please enter a valid port number between 1 and 65535'
                     _monitorPort = ''
                     continue
+
+        if _Keep_Alive == '':
+            histMsg ="""If this option is enabled and the keep-alive service is started, the tunnels will remain active under any circumstances."""
+            print("")
+            lib.AsciArt.BorderIt(Text=histMsg,BorderColor=_fc,TextColor=_fw,WidthBorder=100)                                    
+            _Keep_Alive = input(f'{_B}{_fw}\n\nEnable 🔒 Keep Alive [ Yes / No ] [ {_fy}Y / N{_fw} ] > {_fy}')
+            if _Keep_Alive.strip() == '':
+                continue
+            elif _Keep_Alive.strip().lower() in ['y','yes']:
+                _Keep_Alive = True
+                TunnelDict['Keep_Alive'] = _Keep_Alive
+                continue
+            elif _Keep_Alive.strip().lower() in ['n','no']:
+                _Keep_Alive = False
+                TunnelDict['Keep_Alive'] = _Keep_Alive
+                continue
+            else:
+                Msg = f'Invalid Input, Please enter a valid input [ Yes / No ]'
+                _Keep_Alive = ''
+                continue
+
         if _Code == '':
             _Code = input(f'{_B}{_fw}\n\nEnter 🔁 Tunnel Code > {_fy}')
             if _Code.strip() == '':
