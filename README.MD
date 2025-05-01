@@ -20,6 +20,9 @@
 - فرمان autossh (برای حالت پیشرفته)
 
 
+pip install -r requirements.txt
+
+
 ## اصطلاحات
 -  سرور ها و نقش آنها
     - سرور بالادستی (Upstream Server):
