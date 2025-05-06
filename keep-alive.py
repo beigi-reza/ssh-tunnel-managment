@@ -52,9 +52,12 @@ def FnStartTthread(KeepAliveTunnelList):
 if __name__ == "__main__":    
     logpath  = os.path.join(current_directory,'logs')
     if os.path.exists(logpath) == False:
-        _log = f'Logs Folder not found [ {logpath} ]'
-        print (f"{_log}")        
-        lib.BaseFunction.FnExit()
+        try:
+            os.mkdir(logpath)
+        except PermissionError:
+            print(f"Permission denied: Unable to create '{logpath}'.")               
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     _LineLog = f"### {timestamp},Trying Started Tunnel as Keep Alive Mode ..."
